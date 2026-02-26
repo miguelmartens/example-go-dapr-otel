@@ -1,0 +1,85 @@
+# Example: Kubernetes Deployment with Dapr sidecar
+# Update the image and namespace as needed.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-go-app
+  namespace: default
+  labels:
+    app: example-go-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-go-app
+  template:
+    metadata:
+      labels:
+        app: example-go-app
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "example-go-app"
+        dapr.io/app-port: "8080"
+    spec:
+      containers:
+        - name: example-go-app
+          image: <registry>/example-go-app:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: APP_PORT
+              value: "8080"
+            - name: STATESTORE_NAME
+              value: "statestore"
+            # Optional: OpenTelemetry (Grafana Tempo, Datadog, etc.)
+            # - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            #   value: "http://otel-collector:4318"
+            # - name: OTEL_SERVICE_NAME
+            #   value: "example-go-app"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 128Mi
+          # Startup: allow up to 60s for app + Dapr sidecar to initialize
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 12
+            timeoutSeconds: 3
+          # Readiness: remove from Service when not ready to accept traffic
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 3
+            timeoutSeconds: 3
+          # Liveness: restart container when unrecoverable; higher failureThreshold than readiness
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: http
+            periodSeconds: 10
+            failureThreshold: 6
+            timeoutSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-go-app
+  namespace: default
+spec:
+  selector:
+    app: example-go-app
+  ports:
+    - port: 80
+      targetPort: 8080
+      name: http

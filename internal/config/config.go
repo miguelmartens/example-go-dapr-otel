@@ -18,9 +18,9 @@ type Config struct {
 }
 
 const (
-	defaultPort          = "8080"
-	defaultStoreName     = "statestore"
-	defaultOTELService   = "example-go-app"
+	defaultPort        = "8080"
+	defaultStoreName   = "statestore"
+	defaultOTELService = "example-go-app"
 )
 
 // Load loads .env from the working directory (if present) and returns Config.

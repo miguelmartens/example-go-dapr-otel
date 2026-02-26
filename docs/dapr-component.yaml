@@ -1,0 +1,44 @@
+# Example: Dapr Azure SQL state store component
+# Apply to your cluster after creating the Kubernetes secret with the connection string.
+# For production, use Azure AD (useAzureAD: true) with Managed Identity.
+---
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: statestore
+  namespace: default
+spec:
+  type: state.sqlserver
+  version: v1
+  metadata:
+    # Option 1: SQL Server credentials (development)
+    - name: connectionString
+      secretKeyRef:
+        name: azuresql-secret
+        key: connectionString
+
+    # Option 2: Azure AD (recommended for AKS)
+    # - name: useAzureAD
+    #   value: "true"
+    # - name: connectionString
+    #   value: "sqlserver://<server>.database.windows.net:1433?database=daprstate"
+    # - name: azureTenantId
+    #   secretKeyRef:
+    #     name: azure-ad-secret
+    #     key: tenantId
+    # - name: azureClientId
+    #   secretKeyRef:
+    #     name: azure-ad-secret
+    #     key: clientId
+    # - name: azureClientSecret
+    #   secretKeyRef:
+    #     name: azure-ad-secret
+    #     key: clientSecret
+
+    # Optional metadata
+    - name: tableName
+      value: "state"
+    - name: schema
+      value: "dbo"
+    - name: keyLength
+      value: "200"

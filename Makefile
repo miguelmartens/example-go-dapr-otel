@@ -1,4 +1,4 @@
-.PHONY: build run test lint fmt tidy prettier deps clean
+.PHONY: build run test lint fmt tidy prettier dev clean
 
 BINARY := bin/app
 
@@ -24,6 +24,8 @@ tidy:
 
 prettier:
 	prettier --write .
+
+dev: clean build run
 
 clean:
 	rm -rf bin/

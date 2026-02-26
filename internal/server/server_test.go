@@ -58,7 +58,7 @@ func TestServer_getState_notFound(t *testing.T) {
 		},
 	}
 	srv := New(mock, "store", nil)
-	req := httptest.NewRequest(http.MethodGet, "/state/k", nil)
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/state/k", nil)
 	rec := httptest.NewRecorder()
 	srv.Handler().ServeHTTP(rec, req)
 
@@ -74,7 +74,7 @@ func TestServer_getState_ok(t *testing.T) {
 		},
 	}
 	srv := New(mock, "store", nil)
-	req := httptest.NewRequest(http.MethodGet, "/state/k", nil)
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/state/k", nil)
 	rec := httptest.NewRecorder()
 	srv.Handler().ServeHTTP(rec, req)
 
@@ -96,7 +96,7 @@ func TestServer_saveState(t *testing.T) {
 	}
 	srv := New(mock, "store", nil)
 	body := bytes.NewReader([]byte("payload"))
-	req := httptest.NewRequest(http.MethodPost, "/state/k", body)
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/state/k", body)
 	rec := httptest.NewRecorder()
 	srv.Handler().ServeHTTP(rec, req)
 
@@ -117,7 +117,7 @@ func TestServer_deleteState(t *testing.T) {
 		},
 	}
 	srv := New(mock, "store", nil)
-	req := httptest.NewRequest(http.MethodDelete, "/state/k", nil)
+	req := httptest.NewRequest(http.MethodDelete, "/api/v1/state/k", nil)
 	rec := httptest.NewRecorder()
 	srv.Handler().ServeHTTP(rec, req)
 

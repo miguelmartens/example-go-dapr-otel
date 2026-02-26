@@ -70,6 +70,12 @@ docker push <registry>/example-go-app:latest
 
 Apply the deployment manifest. See [kubernetes-deployment.yaml](./kubernetes-deployment.yaml) for the example.
 
+The deployment includes [Kubernetes health probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) on `/health`:
+
+- **Startup probe**: Allows up to 60s for the app and Dapr sidecar to initialize before liveness/readiness run.
+- **Readiness probe**: Removes the pod from Service endpoints when unhealthy (no traffic until ready).
+- **Liveness probe**: Restarts the container when unrecoverable; uses a higher `failureThreshold` than readiness to avoid premature restarts.
+
 Update the image reference and any environment variables, then:
 
 ```bash
@@ -87,13 +93,13 @@ Test the API (from within the cluster or via port-forward):
 
 ```bash
 # Save state
-curl -X POST http://localhost:8080/state/mykey -d '{"value":"hello"}'
+curl -X POST http://localhost:8080/api/v1/state/mykey -d '{"value":"hello"}'
 
 # Get state
-curl http://localhost:8080/state/mykey
+curl http://localhost:8080/api/v1/state/mykey
 
 # Delete state
-curl -X DELETE http://localhost:8080/state/mykey
+curl -X DELETE http://localhost:8080/api/v1/state/mykey
 
 # Health check
 curl http://localhost:8080/health

@@ -4,7 +4,6 @@ import (
 	"context"
 	"log/slog"
 	"net/url"
-	"os"
 	"strings"
 
 	"go.opentelemetry.io/otel"
@@ -17,15 +16,10 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.27.0"
 )
 
-const defaultServiceName = "example-go-app"
-
 // Init initializes OpenTelemetry trace and metric providers.
-// Uses OTEL_EXPORTER_OTLP_ENDPOINT when set; otherwise no-op providers.
+// Uses cfg.OTELExporterEndpoint when set; otherwise no-op providers.
 // Returns a shutdown function to flush and close exporters.
-func Init(log *slog.Logger) func(context.Context) error {
-	serviceName := getEnv("OTEL_SERVICE_NAME", defaultServiceName)
-	endpoint := os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
-
+func Init(log *slog.Logger, endpoint, serviceName string) func(context.Context) error {
 	if endpoint == "" {
 		log.Info("OTEL_EXPORTER_OTLP_ENDPOINT not set, using no-op telemetry")
 		return func(context.Context) error { return nil }
@@ -110,13 +104,6 @@ func newResource(serviceName string) *resource.Resource {
 		),
 	)
 	return r
-}
-
-func getEnv(key, fallback string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
-	}
-	return fallback
 }
 
 func parseEndpoint(endpoint string) string {

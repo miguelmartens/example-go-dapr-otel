@@ -45,9 +45,9 @@ func New(c StateClient, storeName string, log *slog.Logger) *Server {
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", s.health)
-	mux.HandleFunc("GET /state/{key}", s.getState)
-	mux.HandleFunc("POST /state/{key}", s.saveState)
-	mux.HandleFunc("DELETE /state/{key}", s.deleteState)
+	mux.HandleFunc("GET /api/v1/state/{key}", s.getState)
+	mux.HandleFunc("POST /api/v1/state/{key}", s.saveState)
+	mux.HandleFunc("DELETE /api/v1/state/{key}", s.deleteState)
 	return mux
 }
 
@@ -57,7 +57,7 @@ func (s *Server) health(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (s *Server) getState(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/state/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/state/")
 	if key == "" {
 		http.Error(w, "missing key", http.StatusBadRequest)
 		return
@@ -81,7 +81,7 @@ func (s *Server) getState(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) saveState(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/state/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/state/")
 	if key == "" {
 		http.Error(w, "missing key", http.StatusBadRequest)
 		return
@@ -104,7 +104,7 @@ func (s *Server) saveState(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) deleteState(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/state/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/state/")
 	if key == "" {
 		http.Error(w, "missing key", http.StatusBadRequest)
 		return

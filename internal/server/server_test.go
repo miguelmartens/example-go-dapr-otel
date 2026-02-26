@@ -39,15 +39,17 @@ func (m *mockClient) DeleteState(ctx context.Context, store, key string, meta ma
 
 func TestServer_health(t *testing.T) {
 	srv := New(&mockClient{}, "store", nil)
-	req := httptest.NewRequest(http.MethodGet, "/health", nil)
-	rec := httptest.NewRecorder()
-	srv.Handler().ServeHTTP(rec, req)
+	for _, path := range []string{"/health", "/livez", "/readyz"} {
+		req := httptest.NewRequest(http.MethodGet, path, nil)
+		rec := httptest.NewRecorder()
+		srv.Handler().ServeHTTP(rec, req)
 
-	if rec.Code != http.StatusOK {
-		t.Errorf("health: got status %d, want 200", rec.Code)
-	}
-	if body := rec.Body.String(); body != "OK" {
-		t.Errorf("health: got body %q, want OK", body)
+		if rec.Code != http.StatusOK {
+			t.Errorf("%s: got status %d, want 200", path, rec.Code)
+		}
+		if body := rec.Body.String(); body != "ok" {
+			t.Errorf("%s: got body %q, want ok", path, body)
+		}
 	}
 }
 

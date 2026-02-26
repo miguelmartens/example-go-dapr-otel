@@ -79,12 +79,14 @@ make build
 
 ## API
 
-| Method | Path           | Description                        |
-| ------ | -------------- | ---------------------------------- |
-| GET    | `/health`      | Health check for Kubernetes liveness, readiness, and startup probes |
-| GET    | `/api/v1/state/{key}` | Retrieve state value               |
-| POST   | `/api/v1/state/{key}` | Save state (body = value)          |
-| DELETE | `/api/v1/state/{key}` | Delete state                       |
+| Method | Path                  | Description                                   |
+| ------ | --------------------- | --------------------------------------------- |
+| GET    | `/livez`              | Liveness probe (should process be restarted?) |
+| GET    | `/readyz`             | Readiness probe (ready to accept traffic?)    |
+| GET    | `/health`             | Alias for `/readyz` (backwards compatibility) |
+| GET    | `/api/v1/state/{key}` | Retrieve state value                          |
+| POST   | `/api/v1/state/{key}` | Save state (body = value)                     |
+| DELETE | `/api/v1/state/{key}` | Delete state                                  |
 
 ## Configuration
 

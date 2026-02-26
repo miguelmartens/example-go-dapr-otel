@@ -44,16 +44,31 @@ func New(c StateClient, storeName string, log *slog.Logger) *Server {
 // Handler returns the HTTP handler for the server.
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /health", s.health)
+	// Kubernetes-style health endpoints (https://kubernetes.io/docs/reference/using-api/health-checks/)
+	mux.HandleFunc("GET /livez", s.livez)
+	mux.HandleFunc("GET /readyz", s.readyz)
+	mux.HandleFunc("GET /health", s.health) // alias for backwards compatibility
 	mux.HandleFunc("GET /api/v1/state/{key}", s.getState)
 	mux.HandleFunc("POST /api/v1/state/{key}", s.saveState)
 	mux.HandleFunc("DELETE /api/v1/state/{key}", s.deleteState)
 	return mux
 }
 
-func (s *Server) health(w http.ResponseWriter, _ *http.Request) {
+// livez indicates if the process should be restarted (e.g. deadlock).
+func (s *Server) livez(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("OK"))
+	_, _ = w.Write([]byte("ok"))
+}
+
+// readyz indicates if the app is ready to accept traffic.
+func (s *Server) readyz(w http.ResponseWriter, _ *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte("ok"))
+}
+
+// health is an alias for readyz (backwards compatibility).
+func (s *Server) health(w http.ResponseWriter, r *http.Request) {
+	s.readyz(w, r)
 }
 
 func (s *Server) getState(w http.ResponseWriter, r *http.Request) {

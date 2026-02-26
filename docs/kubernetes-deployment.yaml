@@ -48,25 +48,24 @@ spec:
           # Startup: allow up to 60s for app + Dapr sidecar to initialize
           startupProbe:
             httpGet:
-              path: /health
+              path: /readyz
               port: http
             initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 12
             timeoutSeconds: 3
-          # Readiness: remove from Service when unhealthy; same endpoint, lower threshold
+          # Readiness: remove from Service when not ready to accept traffic
           readinessProbe:
             httpGet:
-              path: /health
+              path: /readyz
               port: http
             periodSeconds: 5
             failureThreshold: 3
             timeoutSeconds: 3
           # Liveness: restart container when unrecoverable; higher failureThreshold than readiness
-          # (avoids restart before pod is marked not-ready)
           livenessProbe:
             httpGet:
-              path: /health
+              path: /livez
               port: http
             periodSeconds: 10
             failureThreshold: 6

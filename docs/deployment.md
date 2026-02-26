@@ -70,11 +70,11 @@ docker push <registry>/example-go-app:latest
 
 Apply the deployment manifest. See [kubernetes-deployment.yaml](./kubernetes-deployment.yaml) for the example.
 
-The deployment includes [Kubernetes health probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) on `/health`:
+The deployment includes [Kubernetes health probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) using `/livez` and `/readyz` ([Kubernetes API health endpoint convention](https://kubernetes.io/docs/reference/using-api/health-checks/)):
 
-- **Startup probe**: Allows up to 60s for the app and Dapr sidecar to initialize before liveness/readiness run.
-- **Readiness probe**: Removes the pod from Service endpoints when unhealthy (no traffic until ready).
-- **Liveness probe**: Restarts the container when unrecoverable; uses a higher `failureThreshold` than readiness to avoid premature restarts.
+- **Startup probe** (`/readyz`): Allows up to 60s for the app and Dapr sidecar to initialize.
+- **Readiness probe** (`/readyz`): Removes the pod from Service endpoints when not ready to accept traffic.
+- **Liveness probe** (`/livez`): Restarts the container when unrecoverable; uses a higher `failureThreshold` than readiness to avoid premature restarts.
 
 Update the image reference and any environment variables, then:
 

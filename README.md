@@ -143,6 +143,14 @@ This project uses [Renovate](https://github.com/apps/renovate) for automated dep
 
 See [docs/RENOVATE_SETUP.md](docs/RENOVATE_SETUP.md) for detailed configuration.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and pull request guidelines.
+
+## License
+
+[MIT](LICENSE)
+
 ## Tooling
 
 - **golangci-lint**: Linting (see `.golangci.yml`)

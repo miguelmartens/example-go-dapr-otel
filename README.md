@@ -18,6 +18,7 @@ A minimal Go application demonstrating Dapr SDK usage with Azure SQL Database as
 ├── components/        # Dapr components (for local dev with Dapr)
 ├── docs/              # Deployment examples (Dapr, Kubernetes, ArgoCD)
 ├── .env.example       # Env template; copy to .env for local config
+├── build/package/     # Docker and packaging configs
 ├── Makefile
 └── go.mod
 ```
@@ -75,6 +76,19 @@ For local development with the Dapr sidecar (e.g. to test against Redis or anoth
 ```bash
 make build
 ./bin/app
+```
+
+### Docker
+
+```bash
+docker build -f build/package/Dockerfile -t example-go-dapr-otel .
+docker run -p 8080:8080 example-go-dapr-otel
+```
+
+Pre-built images are available from [GitHub Container Registry](https://github.com/miguelmartens/example-go-dapr-otel/pkgs/container/example-go-dapr-otel) (after the first CI run):
+
+```bash
+docker pull ghcr.io/miguelmartens/example-go-dapr-otel:latest
 ```
 
 ## API

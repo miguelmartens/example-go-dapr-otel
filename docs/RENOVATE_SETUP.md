@@ -16,6 +16,7 @@ Automated dependency management for this project.
 
 - Opens PRs for outdated **Go modules** (`go.mod` / `go.sum`)
 - Opens PRs for outdated **GitHub Actions** in `.github/workflows/`
+- Opens PRs for outdated **Docker base images** in `build/package/Dockerfile`
 - Labels PRs with `dependencies`
 
 ## Configuration
@@ -26,6 +27,7 @@ The [renovate.json](../renovate.json) at the repo root configures:
 | ----------- | -------------------- |
 | Base preset | `config:recommended` |
 | Go modules  | Enabled              |
+| Dockerfile  | Base images updated  |
 
 ## Local Dry-Run
 

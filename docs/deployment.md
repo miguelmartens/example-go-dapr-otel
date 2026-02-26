@@ -59,10 +59,18 @@ For Azure AD authentication (recommended for production), use `useAzureAD: true`
 
 ## Step 3: Build and Push Container Image
 
-Build the application and push to a container registry (ACR, Docker Hub, etc.):
+**Option A: Use pre-built image from GitHub Container Registry**
+
+Images are built automatically on push to `main`. Pull the latest:
 
 ```bash
-docker build -t <registry>/example-go-app:latest .
+docker pull ghcr.io/miguelmartens/example-go-dapr-otel:latest
+```
+
+**Option B: Build and push to your own registry (ACR, Docker Hub, etc.)**
+
+```bash
+docker build -f build/package/Dockerfile -t <registry>/example-go-app:latest .
 docker push <registry>/example-go-app:latest
 ```
 

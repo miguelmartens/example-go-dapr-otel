@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# Build artifacts
+bin/
+*.exe
+*.test
+*.out
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local env
+.env
+.env.local
+*.local
+
+# Docs and config (not needed in image)
+docs/
+*.md
+.gitattributes
+.prettierrc
+.prettierignore
+.golangci.yml
+renovate.json
+
+# Docker
+build/
+.dockerignore
+
+# CI
+.github/

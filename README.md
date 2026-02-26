@@ -125,10 +125,23 @@ make test     # Run tests
 make lint     # Run go vet and golangci-lint
 make fmt      # Format code
 make tidy     # Tidy go.mod
+make deps     # List available Go dependency updates
 make clean    # Remove build artifacts
 ```
 
 **Local dev without Dapr**: `make dev` runs the app with an in-memory state store when Dapr is unavailable. No Docker or Dapr required.
+
+## Automated Dependency Management
+
+This project uses [Renovate](https://github.com/apps/renovate) for automated dependency updates:
+
+- Automatic PRs for Go modules and GitHub Actions
+- Setup:
+  1. Install the [Renovate GitHub App](https://github.com/apps/renovate) on the repository
+  2. Merge the onboarding PR Renovate creates
+  3. Check the Dependency Dashboard issue for available updates
+
+See [docs/RENOVATE_SETUP.md](docs/RENOVATE_SETUP.md) for detailed configuration.
 
 ## Tooling
 

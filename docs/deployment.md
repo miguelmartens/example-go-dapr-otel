@@ -102,7 +102,15 @@ kubectl get pods -l app=example-go-app
 kubectl logs -l app=example-go-app -c example-go-app -f
 ```
 
-Test the API (from within the cluster or via port-forward):
+### Port-forward (local testing)
+
+To access the app from your machine, port-forward the Service to localhost:
+
+```bash
+kubectl port-forward svc/example-go-app 8080:80
+```
+
+Then test the API at `http://localhost:8080`:
 
 ```bash
 # Save state
@@ -117,6 +125,8 @@ curl -X DELETE http://localhost:8080/api/v1/state/mykey
 # Health check
 curl http://localhost:8080/health
 ```
+
+Press `Ctrl+C` to stop the port-forward.
 
 ## Step 6: Configure Observability (Optional)
 
@@ -162,3 +172,27 @@ kubectl apply -f docs/argocd-application.yaml
 - **State operations fail**: Verify the Dapr component is applied and the Azure SQL secret exists. Check Dapr sidecar logs: `kubectl logs <pod> -c daprd`.
 - **No traces/metrics**: Ensure `OTEL_EXPORTER_OTLP_ENDPOINT` is set and the OTLP receiver (Grafana Alloy, Datadog Agent, etc.) is reachable from the pod.
 - **Connection refused to Dapr**: Ensure the app listens on the port specified in `dapr.io/app-port`.
+
+## Cleanup
+
+Remove Kubernetes resources:
+
+```bash
+# Deployment and Service
+kubectl delete -f docs/kubernetes-deployment.yaml
+
+# Dapr component
+kubectl delete -f docs/dapr-component.yaml
+
+# Azure SQL secret
+kubectl delete secret azuresql-secret
+```
+
+To remove Azure SQL resources (database, server, resource group):
+
+```bash
+az sql db delete --resource-group <rg> --server <server-name> --name daprstate --yes
+az sql server delete --resource-group <rg> --name <server-name> --yes
+# Optionally delete the resource group:
+# az group delete --name <rg> --yes --no-wait
+```

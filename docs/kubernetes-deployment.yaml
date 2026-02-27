@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: example-go-app
-          image: <registry>/example-go-app:latest
+          image: ghcr.io/miguelmartens/example-go-dapr-otel:latest
           ports:
             - containerPort: 8080
               name: http

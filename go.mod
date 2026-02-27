@@ -3,7 +3,7 @@ module github.com/miguelmartens/example-go-dapr-otel
 go 1.26
 
 require (
-	github.com/dapr/go-sdk v1.14.0
+	github.com/dapr/go-sdk v1.14.1
 	github.com/joho/godotenv v1.5.1
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.65.0
 	go.opentelemetry.io/otel v1.40.0

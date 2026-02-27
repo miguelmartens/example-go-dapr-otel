@@ -12,7 +12,6 @@ Thank you for your interest in contributing to this project.
    ```
 
 2. **Ensure you have the requirements**
-
    - Go 1.26+
    - [golangci-lint](https://golangci-lint.run/) (for `make lint`)
    - [Prettier](https://prettier.io/) (for `make prettier`)

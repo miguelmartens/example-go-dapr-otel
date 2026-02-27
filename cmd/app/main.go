@@ -17,6 +17,46 @@ import (
 	"github.com/miguelmartens/example-go-dapr-otel/internal/telemetry"
 )
 
+// waitForDapr polls the Dapr outbound health endpoint until ready or ctx expires.
+// Returns true if Dapr is ready. Skips waiting when DAPR_GRPC_PORT is unset (no sidecar injected).
+func waitForDapr(ctx context.Context, log *slog.Logger) bool {
+	if os.Getenv("DAPR_GRPC_PORT") == "" {
+		return false // No sidecar (e.g. local dev); skip wait
+	}
+	port := "3500"
+	if p := os.Getenv("DAPR_HTTP_PORT"); p != "" {
+		port = p
+	}
+	url := "http://127.0.0.1:" + port + "/v1.0/healthz/outbound"
+	httpClient := &http.Client{Timeout: 2 * time.Second}
+
+	for {
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+		if err != nil {
+			return false
+		}
+		resp, err := httpClient.Do(req)
+		if err != nil {
+			select {
+			case <-ctx.Done():
+				return false
+			case <-time.After(500 * time.Millisecond):
+			}
+			continue
+		}
+		_ = resp.Body.Close()
+		if resp.StatusCode == http.StatusOK {
+			log.Info("Dapr sidecar ready")
+			return true
+		}
+		select {
+		case <-ctx.Done():
+			return false
+		case <-time.After(500 * time.Millisecond):
+		}
+	}
+}
+
 func main() {
 	cfg := config.Load()
 
@@ -30,6 +70,10 @@ func main() {
 	}()
 
 	var stateClient server.StateClient
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	_ = waitForDapr(ctx, log)
+	cancel()
+
 	daprClient, err := client.NewClient()
 	if err != nil {
 		log.Info("Dapr unavailable, using in-memory store for local dev", "err", err)
@@ -60,7 +104,7 @@ func main() {
 	<-quit
 
 	log.Info("shutting down")
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	if err := httpSrv.Shutdown(ctx); err != nil {

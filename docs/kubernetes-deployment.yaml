@@ -21,6 +21,7 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "example-go-app"
         dapr.io/app-port: "8080"
+        dapr.io/enable-api-logging: "true"
     spec:
       containers:
         - name: example-go-app

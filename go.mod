@@ -3,7 +3,7 @@ module github.com/miguelmartens/example-go-dapr-otel
 go 1.26
 
 require (
-	github.com/dapr/go-sdk v1.13.0
+	github.com/dapr/go-sdk v1.14.0
 	github.com/joho/godotenv v1.5.1
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.65.0
 	go.opentelemetry.io/otel v1.40.0
@@ -17,9 +17,9 @@ require (
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/dapr/dapr v1.16.0 // indirect
-	github.com/dapr/durabletask-go v0.10.0 // indirect
-	github.com/dapr/kit v0.16.1 // indirect
+	github.com/dapr/dapr v1.17.0 // indirect
+	github.com/dapr/durabletask-go v0.11.0 // indirect
+	github.com/dapr/kit v0.17.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect

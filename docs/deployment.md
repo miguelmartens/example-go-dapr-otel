@@ -46,10 +46,10 @@ The app uses a **Dapr State Store component** (Kubernetes `Component` resource) 
 
 ## Step 2: Configure Dapr Azure SQL State Store Component
 
-Create a Kubernetes secret with the connection string. **Keep the entire connection string on one line**—newlines will break DNS resolution (e.g. `lookup example-sqlserver2\n.database.windows.net: no such host`):
+Create a Kubernetes secret with the connection string. **Keep the entire connection string on one line**—newlines will break DNS resolution (e.g. `lookup example-sqlserver2.database.windows.net: no such host`):
 
 ```bash
-kubectl create secret generic azuresql-secret --from-literal=connectionString='Server=tcp:<server>.database.windows.net,1433;Database=daprstate;User ID=<user>;Password=<password>;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+kubectl create secret generic azuresql-secret --from-literal=connectionString='Server=tcp:<server>.database.windows.net,1433;Database=<database>;User ID=<user>;Password=<password>;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 ```
 
 Apply the Dapr component:

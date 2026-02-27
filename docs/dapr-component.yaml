@@ -1,5 +1,12 @@
 # Example: Dapr Azure SQL state store component
 # Apply to your cluster after creating the Kubernetes secret with the connection string.
+#
+# Prerequisites:
+#   1. Azure SQL Server + database (create via Azure Portal or CLI)
+#   2. Create K8s secret: kubectl create secret generic azuresql-secret \
+#        --from-literal=connectionString='Server=tcp:YOUR_SERVER.database.windows.net,1433;Database=YOUR_DB;User Id=YOUR_USER;Password=YOUR_PASSWORD;Encrypt=yes;'
+#   3. Apply this component (same namespace as the secret)
+#
 # For production, use Azure AD (useAzureAD: true) with Managed Identity.
 ---
 apiVersion: dapr.io/v1alpha1
